@@ -10,28 +10,25 @@ int main(int argc, char **argv) {
   if (child < 0)
     FATAL("%s\n", strerror(errno));
   if (child == 0) {
-    ptrace(PTRACE_TRACEME, 0, NULL, NULL);
     execve(argv[1], argv + 1, NULL);
     FATAL("%s\n", strerror(errno));
   }
-  struct user_regs_struct regs;
-  int64_t                 syscall;
-  ptrace(PTRACE_SETOPTIONS, child, 0, PTRACE_O_EXITKILL);
+  int status;
+  ptrace(PTRACE_SEIZE, child, 0, PTRACE_O_TRACESYSGOOD);
+  ptrace(PTRACE_INTERRUPT, child, 0, 0);
   while (42) {
+    status = 0;
     ptrace(PTRACE_SYSCALL, child, 0, 0);
-    if (waitpid(child, 0, 0) == -1)
-      FATAL("waitpid()1 fail\n");
-    ptrace(PTRACE_GETREGS, child, 0, &regs);
-    syscall = regs.orig_rax;
-    fprintf(stderr, "%ld(%lld, %lld, %lld, %lld, %lld, %lld)", syscall,
-            regs.rdi, regs.rsi, regs.rdx, regs.r10, regs.r8, regs.r9);
-
-    // syscall out
-    ptrace(PTRACE_SYSCALL, child, 0, 0);
-    if (waitpid(child, 0, 0) == -1)
-      FATAL("waitpid()2 fail\n");
-    if (ptrace(PTRACE_GETREGS, child, 0, &regs) == -1)
-      fprintf(stderr, " = %lld\n", regs.rax);
+    if (waitpid(child, &status, 0) == -1)
+      FATAL("waitpid() fail\n");
+    if (WIFEXITED(status))
+      printf("exited, status=%d\n", WEXITSTATUS(status));
+    else if (WIFSIGNALED(status))
+      printf("killed by signal %d\n", WTERMSIG(status));
+    else if (WIFSTOPPED(status))
+      printf("stopped by signal %d\n", WSTOPSIG(status));
+    else if (WIFCONTINUED(status))
+      printf("continued\n");
   }
   return EXIT_SUCCESS;
 }
