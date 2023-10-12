@@ -18,8 +18,9 @@
     exit(1);                                                                   \
   } while (0)
 
-typedef struct syscalls_x86_64_s {
+typedef struct syscall_x86_64_s {
   char *name;
-} syscalls_x86_64_t;
+  char *format;
+} syscall_x86_64_t;
 
 #endif  // FT_STRACE_H
