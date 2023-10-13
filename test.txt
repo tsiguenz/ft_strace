@@ -1,9 +1,3 @@
-#ifndef SYSCALLS_X86_64_H
-#define SYSCALLS_X86_64_H
-
-// clang-format off
-#define SYSCALLS_NBR 328
-#define SYSCALLS_ENT_X86_64                                                    \
 [0] = { "read", "%s(%u, \"%s\", %lu" },                                        \
 [1] = { "write", "%s(%u, \"%s\", %lu" },                                       \
 [2] = { "open", "%s(\"%s\", %d, %d" },                                         \
@@ -11,8 +5,8 @@
 [4] = { "stat", "%s(\"%s\", %p" },                                             \
 [5] = { "fstat", "%s(%u, %p" },                                                \
 [6] = { "lstat", "%s(\"%s\", %p" },                                            \
-[7] = { "poll", "%s(%p, %u, %ld" },                                             \
-[8] = { "lseek", "%s(%u,%ld, %u" },                                             \
+[7] = { "poll", "%s(%p, %u, %l" },                                             \
+[8] = { "lseek", "%s(%u,%l, %u" },                                             \
 [9] = { "mmap", "%s(%lu, %lu, %lu, %lu, %lu, %lu" },                           \
 [10] = { "mprotect", "%s(%lu, %lu, %lu" },                                     \
 [11] = { "munmap", "%s(%lu, %lu" },                                            \
@@ -21,8 +15,8 @@
 [14] = { "rt_sigprocmask", "%s(%d, %p, %p, %lu" },                             \
 [15] = { "rt_sigreturn", "%s(%lu" },                                           \
 [16] = { "ioctl", "%s(%u, %u, %lu" },                                          \
-[17] = { "pread64", "%s(%lu, \"%s\", %lu,%ld" },                                \
-[18] = { "pwrite64", "%s(%u, \"%s\", %lu,%ld" },                                \
+[17] = { "pread64", "%s(%lu, \"%s\", %lu,%l" },                                \
+[18] = { "pwrite64", "%s(%u, \"%s\", %lu,%l" },                                \
 [19] = { "readv", "%s(%lu, %p, %lu" },                                         \
 [20] = { "writev", "%s(%lu, %p, %lu" },                                        \
 [21] = { "access", "%s(\"%s\", %d" },                                          \
@@ -71,28 +65,28 @@
 [64] = { "semget", "%s(%d, %d, %d" },                                          \
 [65] = { "semop", "%s(%d, %p, %d" },                                           \
 [66] = { "semctl", "%s(%d, %d, %d" },                                          \
-[67] = { "shmdt", "%s(\"%s\"" },                                               \
+[67] = { "shmdt", "%s(\"%s\", "%s(" },                                         \
 [68] = { "msgget", "%s(%d, %d" },                                              \
 [69] = { "msgsnd", "%s(%d, %p, %lu, %d" },                                     \
-[70] = { "msgrcv", "%s(%d, %p, %lu, %ld, %d" },                                 \
+[70] = { "msgrcv", "%s(%d, %p, %lu, %l, %d" },                                 \
 [71] = { "msgctl", "%s(%d, %d, %p" },                                          \
 [72] = { "fcntl", "%s(%u, %u, %lu" },                                          \
 [73] = { "flock", "%s(%u, %u" },                                               \
 [74] = { "fsync", "%s(%u" },                                                   \
 [75] = { "fdatasync", "%s(%u" },                                               \
-[76] = { "truncate", "%s(\"%s\", %ld" },                                        \
+[76] = { "truncate", "%s(\"%s\", %l" },                                        \
 [77] = { "ftruncate", "%s(%u, %lu" },                                          \
 [78] = { "getdents", "%s(%u, %p, %u" },                                        \
 [79] = { "getcwd", "%s(\"%s\", %lu" },                                         \
-[80] = { "chdir", "%s(\"%s\"" },                                               \
+[80] = { "chdir", "%s(\"%s\", "%s(" },                                         \
 [81] = { "fchdir", "%s(%u" },                                                  \
-[82] = { "rename", "%s(\"%s\", \"%s\"" },                                      \
+[82] = { "rename", "%s(\"%s\", \"%s\", "%s(" },                                \
 [83] = { "mkdir", "%s(\"%s\", %d" },                                           \
-[84] = { "rmdir", "%s(\"%s\"" },                                               \
+[84] = { "rmdir", "%s(\"%s\", "%s(" },                                         \
 [85] = { "creat", "%s(\"%s\", %d" },                                           \
-[86] = { "link", "%s(\"%s\", \"%s\"" },                                        \
-[87] = { "unlink", "%s(\"%s\"" },                                              \
-[88] = { "symlink", "%s(\"%s\", \"%s\"" },                                     \
+[86] = { "link", "%s(\"%s\", \"%s\", "%s(" },                                  \
+[87] = { "unlink", "%s(\"%s\", "%s(" },                                        \
+[88] = { "symlink", "%s(\"%s\", \"%s\", "%s(" },                               \
 [89] = { "readlink", "%s(\"%s\", \"%s\", %d" },                                \
 [90] = { "chmod", "%s(\"%s\", %u" },                                           \
 [91] = { "fchmod", "%s(%u, %u" },                                              \
@@ -105,7 +99,7 @@
 [98] = { "getrusage", "%s(%d, %p" },                                           \
 [99] = { "sysinfo", "%s(%p" },                                                 \
 [100] = { "times", "%s(%p" },                                                  \
-[101] = { "ptrace", "%s(%ld, %ld, %lu, %lu" },                                   \
+[101] = { "ptrace", "%s(%l, %l, %lu, %lu" },                                   \
 [102] = { "getuid", "%s(" },                                                   \
 [103] = { "syslog", "%s(%d, \"%s\", %d" },                                     \
 [104] = { "getgid", "%s(" },                                                   \
@@ -191,7 +185,7 @@
 [184] = { "tuxcall", "%s(NOT IMPLEMENTED" },                                   \
 [185] = { "security", "%s(NOT IMPLEMENTED" },                                  \
 [186] = { "gettid", "%s(" },                                                   \
-[187] = { "readahead", "%s(%d,%ld, %lu" },                                      \
+[187] = { "readahead", "%s(%d,%l, %lu" },                                      \
 [188] = { "setxattr", "%s(\"%s\", \"%s\", %p, %lu, %d" },                      \
 [189] = { "lsetxattr", "%s(\"%s\", \"%s\", %p, %lu, %d" },                     \
 [190] = { "fsetxattr", "%s(%d, \"%s\", %p, %lu, %d" },                         \
@@ -212,11 +206,11 @@
 [205] = { "set_thread_area", "%s(NOT IMPLEMENTED. Use arch_prctl" },           \
 [206] = { "io_setup", "%s(%d, %p" },                                           \
 [207] = { "io_destroy", "%s(%lu" },                                            \
-[208] = { "io_getevents", "%s(%lu, %ld, %ld, %p" },                              \
-[209] = { "io_submit", "%s(%lu, %ld, %p" },                                     \
+[208] = { "io_getevents", "%s(%lu, %l, %l, %p" },                              \
+[209] = { "io_submit", "%s(%lu, %l, %p" },                                     \
 [210] = { "io_cancel", "%s(%lu, %p, %p" },                                     \
 [211] = { "get_thread_area", "%s(NOT IMPLEMENTED. Use arch_prctl" },           \
-[212] = { "lookup_dcookie", "%s(%lu %ld, %ld" },                                 \
+[212] = { "lookup_dcookie", "%s(%lu %l, %l" },                                 \
 [213] = { "epoll_create", "%s(%d" },                                           \
 [214] = { "epoll_ctl_old", "%s(NOT IMPLEMENTED" },                             \
 [215] = { "epoll_wait_old", "%s(NOT IMPLEMENTED" },                            \
@@ -225,7 +219,7 @@
 [218] = { "set_tid_address", "%s(%p" },                                        \
 [219] = { "restart_syscall", "%s(" },                                          \
 [220] = { "semtimedop", "%s(%d, %p, %d, %p" },                                 \
-[221] = { "fadvise64", "%s(%d,%ld, %lu, %d" },                                  \
+[221] = { "fadvise64", "%s(%d,%l, %lu, %d" },                                  \
 [222] = { "timer_create", "%s( %d, %p, %p" },                                  \
 [223] = { "timer_settime", "%s(%p, %d, %p, %p" },                              \
 [224] = { "timer_gettime", "%s(%p, %p" },                                      \
@@ -281,7 +275,7 @@
 [274] = { "get_robust_list", "%s(%d, %p, %p" },                                \
 [275] = { "splice", "%s(%d,%p, %d,%p, %lu, %u" },                              \
 [276] = { "tee", "%s(%d, %d, %lu, %u" },                                       \
-[277] = { "sync_file_range", "%s(%ld,%ld,%ld, %ld" },                              \
+[277] = { "sync_file_range", "%s(%l,%l,%l, %l" },                              \
 [278] = { "vmsplice", "%s(%d, %p, %lu, %u" },                                  \
 [279] = { "move_pages", "%s(%d, %lu, %p, %p, %p, %d" },                        \
 [280] = { "utimensat", "%s(%d, \"%s\", %p, %d" },                              \
@@ -289,7 +283,7 @@
 [282] = { "signalfd", "%s(%d, %p, %lu" },                                      \
 [283] = { "timerfd_create", "%s(%d, %d" },                                     \
 [284] = { "eventfd", "%s(%u" },                                                \
-[285] = { "fallocate", "%s(%ld, %ld,%ld,%ld" },                                    \
+[285] = { "fallocate", "%s(%l, %l,%l,%l" },                                    \
 [286] = { "timerfd_settime", "%s(%d, %d, %p, %p" },                            \
 [287] = { "timerfd_gettime", "%s(%d, %p" },                                    \
 [288] = { "accept4", "%s(%d, %p, %p, %d" },                                    \
@@ -305,7 +299,7 @@
 [298] = { "perf_event_open", "%s(%p, %d, %d, %d, %lu" },                       \
 [299] = { "recvmmsg", "%s(%d, %p, %u, %u, %p" },                               \
 [300] = { "fanotify_init", "%s(%u, %u" },                                      \
-[301] = { "fanotify_mark", "%s(%ld, %ld, %lu, %ld, %ld" },                         \
+[301] = { "fanotify_mark", "%s(%l, %l, %lu, %l, %l" },                         \
 [302] = { "prlimit64", "%s(%d, %u, %p, %p" },                                  \
 [303] = { "name_to_handle_at", "%s(%d, \"%s\", %p, %p, %d" },                  \
 [304] = { "open_by_handle_at", "%s(%d, \"%s\", %p, %p, %d" },                  \
@@ -330,8 +324,6 @@
 [323] = { "userfaultfd", "%s(%d" },                                            \
 [324] = { "membarrier", "%s(%d, %d" },                                         \
 [325] = { "mlock2", "%s(%lu, %lu, %d" },                                       \
-[326] = { "copy_file_range", "%s(%d,%ld, %d, %ld, %lu, %u" },                    \
+[326] = { "copy_file_range", "%s(%d,%l, %d, %l, %lu, %u" },                    \
 [327] = { "preadv2", "%s(%lu, %p, %lu, %lu, %lu, %d" },                        \
 [328] = { "pwritev2", "%s(%lu, %p, %lu, %lu, %lu, %d" }
-
-#endif  // SYSCALLS_X86_64_H

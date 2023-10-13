@@ -15,14 +15,11 @@ void handle_syscall_io(int pid, int i) {
     FATAL("%s: ptrace(GETREGSET): %s\n", prog_name, strerror(errno));
   if (io.iov_len == sizeof(regs.regs64)) {
     if (!(i % 2)) {
-      syscall_x86_64_t syscall = syscalls_x86_64[regs.regs64.orig_rax];
-      if (regs.regs64.orig_rax == 59) {
-        // printf with more args than format require is good ?
-        fprintf(stderr, syscall.format, syscall.name, regs.regs64.rdi,
-                regs.regs64.rsi, regs.regs64.rdx);
-      } else
-        fprintf(stderr, "%s(%llu, %llu, %llu", syscall.name, regs.regs64.rdi,
-                regs.regs64.rsi, regs.regs64.rdx);
+      struct user_regs_struct current_regs = regs.regs64;
+      syscall_x86_64_t        syscall = syscalls_x86_64[regs.regs64.orig_rax];
+      fprintf(stderr, syscall.format, syscall.name, current_regs.rdi,
+              current_regs.rsi, current_regs.rdx, current_regs.rcx,
+              current_regs.r8, current_regs.r9);
     } else
       fprintf(stderr, ") = %llu\n", regs.regs64.rax);
   }  //else {
