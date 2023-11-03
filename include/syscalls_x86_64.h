@@ -25,7 +25,7 @@
 [18] = { "pwrite64", "%s(%u, \"%s\", %lu,%ld" },                                \
 [19] = { "readv", "%s(%lu, %p, %lu" },                                         \
 [20] = { "writev", "%s(%lu, %p, %lu" },                                        \
-[21] = { "access", "%s(\"%s\", %d" },                                          \
+[21] = { "access", "%s(\"%x\", %d" },                                          \
 [22] = { "pipe", "%s(%p" },                                                    \
 [23] = { "select", "%s(%d, %p, %p, %p, %p" },                                  \
 [24] = { "sched_yield", "%s(" },                                               \
