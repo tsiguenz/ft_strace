@@ -18,3 +18,4 @@ ft_strace
 .nfs*
 *.test*
 .vagrant
+test/*_*
