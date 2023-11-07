@@ -14,7 +14,7 @@
 obj/
 ft_strace
 *.[ao]
-a.out
+*.out*
 .nfs*
 *.test*
 .vagrant

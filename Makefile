@@ -1,6 +1,5 @@
 NAME = ft_strace
 EXEC = $(PWD)/$(NAME)
-TEST_NAME = $(NAME)_test
 
 CC = gcc
 FLAGS = -Wall -Wextra -Werror -g3
@@ -9,19 +8,18 @@ VALGRIND = valgrind --leak-check=full --show-leak-kinds=all \
 
 SRC_PATH = src/
 OBJ_PATH = obj/
-TEST_PATH = test/
 HEADERS = -Iinclude
 
-SRC_NAME =	main.c	\
-						child.c	\
-
-TEST_SRC_NAME = test_main.c \
+SRC_NAME =	main.c	 \
+						child.c	 \
+						tracer.c \
+						print.c  \
+						utils.c  \
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_NAME))
 SRC = $(addprefix $(SRC_PATH), $(SRC_NAME))
-TEST_SRC = $(addprefix $(TEST_PATH), $(TEST_SRC_NAME))
 
 $(NAME): $(OBJ)
 	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
@@ -48,4 +46,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re test run valgrind
+.PHONY: all clean fclean re run valgrind

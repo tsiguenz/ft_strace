@@ -14,6 +14,9 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include "registers.h"
+#include "syscalls_x86_64.h"
+
 #define FATAL(...)                                                             \
   do {                                                                         \
     fprintf(stderr, __VA_ARGS__);                                              \
@@ -29,5 +32,17 @@ extern const char      *prog_name;
 extern syscall_x86_64_t syscalls_x86_64[];
 
 void child_exec(char **argv, char **envp);
+void handle_syscall_io(int pid);
+int  trace_syscalls(int pid);
+void print_regs(union user_regs_t regs, struct iovec io);
+void print_in_kernel_space_x86_64(struct x86_64_user_regs_struct registers,
+                                  syscall_x86_64_t               syscall);
+void print_out_kernel_space_x86_64(struct x86_64_user_regs_struct registers);
+void print_in_kernel_space_i386(struct i386_user_regs_struct registers,
+                                syscall_x86_64_t             syscall);
+void print_out_kernel_space_i386(struct i386_user_regs_struct registers);
+bool is_child_call(bool *print, bool *in_kernel_space,
+                   const char *syscall_name);
+void disable_signals(void);
 
 #endif  // FT_STRACE_H

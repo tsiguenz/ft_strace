@@ -24,7 +24,7 @@ struct i386_user_regs_struct {
   uint32_t xss;
 };
 
-struct x86_user_regs_struct {
+struct x86_64_user_regs_struct {
   uint64_t r15;
   uint64_t r14;
   uint64_t r13;
@@ -55,8 +55,8 @@ struct x86_user_regs_struct {
 };
 
 union user_regs_t {
-  struct i386_user_regs_struct regs32;
-  struct x86_user_regs_struct  regs64;
+  struct i386_user_regs_struct   regs32;
+  struct x86_64_user_regs_struct regs64;
 };
 
 #endif  // REGISTERS_H
