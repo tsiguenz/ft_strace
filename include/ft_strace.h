@@ -4,6 +4,7 @@
 #include <elf.h>
 #include <errno.h>
 #include <mqueue.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,5 +24,10 @@ typedef struct syscall_x86_64_s {
   char *name;
   char *format;
 } syscall_x86_64_t;
+
+extern const char      *prog_name;
+extern syscall_x86_64_t syscalls_x86_64[];
+
+void child_exec(char **argv, char **envp);
 
 #endif  // FT_STRACE_H

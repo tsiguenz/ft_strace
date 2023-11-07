@@ -3,7 +3,7 @@ EXEC = $(PWD)/$(NAME)
 TEST_NAME = $(NAME)_test
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g3
 VALGRIND = valgrind --leak-check=full --show-leak-kinds=all \
 					 --track-fds=yes --trace-children=yes
 
@@ -12,7 +12,8 @@ OBJ_PATH = obj/
 TEST_PATH = test/
 HEADERS = -Iinclude
 
-SRC_NAME = main.c \
+SRC_NAME =	main.c	\
+						child.c	\
 
 TEST_SRC_NAME = test_main.c \
 
