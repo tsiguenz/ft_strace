@@ -46,7 +46,8 @@ void handle_syscall_io(int pid) {
 }
 
 int trace_syscalls(int pid) {
-  int status;
+  int       status;
+  siginfo_t sig;
   ptrace(PTRACE_SEIZE, pid, 0, 0);
   ptrace(PTRACE_INTERRUPT, pid, 0, 0);
   disable_signals();
@@ -54,6 +55,8 @@ int trace_syscalls(int pid) {
   for (; 42;) {
     status = 0;
     ptrace(PTRACE_SYSCALL, pid, 0, 0);
+    ptrace(PTRACE_GETSIGINFO, pid, 0, &sig);
+    //    printf("is user signal: %d\n", sig.si_code == SI_USER);
     if (waitpid(pid, &status, 0) == -1) {
       FATAL("%s: waitpid(): %s\n", prog_name, strerror(errno));
     }

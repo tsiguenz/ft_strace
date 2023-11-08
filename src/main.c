@@ -2,7 +2,7 @@
 
 const char      *prog_name;
 syscall_x86_64_t syscalls_x86_64[] = {SYSCALLS_ENT_X86_64};
-// TODO: add i386 syscalls
+// TODO(tsiguenz): add i386 syscalls
 syscall_x86_64_t syscalls_i386[] = {SYSCALLS_ENT_X86_64};
 
 int strace(char **argv, char **envp) {
