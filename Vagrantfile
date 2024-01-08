@@ -1,6 +1,5 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "debian/bullseye64"
-  config.vm.synced_folder "./", "/mnt/project/"
 
   config.vm.provider "virtualbox" do |vb|
     # Display the VirtualBox GUI when booting the machine

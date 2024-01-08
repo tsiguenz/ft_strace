@@ -14,19 +14,18 @@ void handle_syscall_io(int pid) {
   bool is_64_bits = io.iov_len == sizeof(regs.regs64);
   bool is_32_bits = io.iov_len == sizeof(regs.regs32);
   if (is_64_bits) {
-    // INFO: ptrace use process_vm_readv
-    // print_regs(regs, io);
+    print_regs(pid, regs, io);
     struct x86_64_user_regs_struct current_regs = regs.regs64;
     syscall_x86_64_t syscall = syscalls_x86_64[current_regs.orig_rax];
     if (!is_child_call(&print, &in_kernel_space, syscall.name))
       return;
-    if (in_kernel_space) {
-      print_in_kernel_space_x86_64(current_regs, syscall);
-      in_kernel_space = false;
-    } else {
-      print_out_kernel_space_x86_64(current_regs);
-      in_kernel_space = true;
-    }
+    //    if (in_kernel_space) {
+    //      print_in_kernel_space_x86_64(pid, current_regs, syscall);
+    //      in_kernel_space = false;
+    //    } else {
+    //      print_out_kernel_space_x86_64(current_regs);
+    //      in_kernel_space = true;
+    //    }
   } else if (is_32_bits) {
     struct i386_user_regs_struct current_regs = regs.regs32;
     syscall_x86_64_t syscall = syscalls_x86_64[current_regs.orig_eax];
