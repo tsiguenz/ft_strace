@@ -19,6 +19,9 @@
 #include "registers.h"
 #include "syscalls_x86_64.h"
 
+#define MAX_LEN_STR_ARG 42
+#define MAX_ARGS 6
+
 #define FATAL(...)                                                             \
   do {                                                                         \
     fprintf(stderr, __VA_ARGS__);                                              \
@@ -46,6 +49,6 @@ void print_out_kernel_space_i386(struct i386_user_regs_struct registers);
 bool is_child_call(bool *print, bool *in_kernel_space,
                    const char *syscall_name);
 void disable_signals(void);
-bool get_string_from_process(int pid, uint64_t address, char* arg);
+bool get_str_from_process(int pid, uint64_t address, char* arg);
 
 #endif  // FT_STRACE_H
