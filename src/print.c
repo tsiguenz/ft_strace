@@ -21,7 +21,6 @@ void print_regs(int pid, union user_regs_t regs, struct iovec io) {
 }
 
 int get_index_of_str_param(char *syscall_format) {
-  printf("format = %s", syscall_format);
   static char *ptr         = NULL;
   static int   index_param = -1;
   // skip format of the syscall name
@@ -45,15 +44,10 @@ void set_str_params(int pid, struct x86_64_user_regs_struct *registers,
                     char  str_params[MAX_ARGS][MAX_LEN_STR_ARG]) {
   (void) syscall_format;
   while (1) {
-    int return_value = 0;
-    int i            = 1;  //get_index_of_str_param(syscall_format);
-    printf("index = %d\n", get_index_of_str_param("%s(%d %s %d %s)"));
-    printf("index = %d\n", get_index_of_str_param("%s(%d %s %d %s)"));
-    printf("index = %d\n", get_index_of_str_param("%s(%d %s %d %s)"));
-    printf("2index = %d\n", get_index_of_str_param("%s(%s %d %s %d)"));
-    printf("2index = %d\n", get_index_of_str_param("%s(%s %d %s %d)"));
-    printf("2index = %d\n", get_index_of_str_param("%s(%s %d %s %d)"));
-    uint64_t *reg = NULL;
+    int       return_value = 0;
+    int       i            = get_index_of_str_param(syscall_format) - 1;
+    uint64_t *reg          = NULL;
+    printf("-- %s   %d\n", syscall_format, i);
     switch (i) {
     case 0:
       reg = &(registers->rdi);
