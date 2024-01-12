@@ -2,6 +2,7 @@
 #define SYSCALLS_X86_64_H
 
 // clang-format off
+// check /usr/include/x86_64-linux-gnu/asm/unistd_64.h
 #define SYSCALLS_NBR 328
 #define SYSCALLS_ENT_X86_64                                                    \
 [0] = { "read", "%s(%u, \"%s\", %lu" },                                        \
