@@ -2,13 +2,11 @@ Vagrant.configure("2") do |config|
   config.vm.box = "debian/bullseye64"
 
   config.vm.provider "virtualbox" do |vb|
-    # Display the VirtualBox GUI when booting the machine
     vb.gui = false
-    # Customize the amount of memory on the VM:
-    vb.memory = "2048"
+    vb.cpus = 4
+    vb.memory = "4096"
   end
 
-    config.vm.provision :shell, :inline => "sudo rm /etc/localtime && sudo ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime", run: "always"
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
     apt-get upgrade

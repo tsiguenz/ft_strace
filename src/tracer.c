@@ -8,9 +8,8 @@ void handle_syscall_io(int pid) {
            .iov_base = &regs,
            .iov_len  = sizeof(regs),
   };
-  if (ptrace(PTRACE_GETREGSET, pid, NT_PRSTATUS, &io) == -1) {
+  if (ptrace(PTRACE_GETREGSET, pid, NT_PRSTATUS, &io) == -1)
     FATAL("%s: ptrace(GETREGSET): %s\n", prog_name, strerror(errno));
-  }
   bool is_64_bits = io.iov_len == sizeof(regs.regs64);
   bool is_32_bits = io.iov_len == sizeof(regs.regs32);
   if (is_64_bits) {
@@ -19,16 +18,13 @@ void handle_syscall_io(int pid) {
     syscall_x86_64_t syscall = syscalls_x86_64[current_regs.orig_rax];
     if (!is_child_call(&print, &in_kernel_space, syscall.name))
       return;
-    //    if (!strcmp(syscall.name, "write")) {
     if (in_kernel_space) {
-      printf("%s\n", syscall.name);
       print_in_kernel_space_x86_64(pid, current_regs, syscall);
       in_kernel_space = false;
     } else {
       print_out_kernel_space_x86_64(current_regs);
       in_kernel_space = true;
     }
-    //   }
   } else if (is_32_bits) {
     struct i386_user_regs_struct current_regs = regs.regs32;
     syscall_x86_64_t syscall = syscalls_x86_64[current_regs.orig_eax];

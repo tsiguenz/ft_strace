@@ -49,6 +49,9 @@ void print_out_kernel_space_i386(struct i386_user_regs_struct registers);
 bool is_child_call(bool *print, bool *in_kernel_space,
                    const char *syscall_name);
 void disable_signals(void);
-bool get_str_from_process(int pid, uint64_t address, char* arg);
+
+void set_str_params_to_regs(int pid, struct x86_64_user_regs_struct *registers,
+                    char *syscall_format,
+                    char  str_params[MAX_ARGS][MAX_LEN_STR_ARG]);
 
 #endif  // FT_STRACE_H
