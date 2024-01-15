@@ -1,4 +1,5 @@
 #include "ft_strace.h"
+#include <errno.h>
 
 void handle_syscall_io(int pid) {
   static bool       print           = false;

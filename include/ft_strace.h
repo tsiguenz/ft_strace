@@ -4,20 +4,18 @@
 // for process_vm_readv
 #define _GNU_SOURCE
 #include <elf.h>
-#include <errno.h>
 #include <mqueue.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/ptrace.h>
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "registers.h"
-#include "syscalls_x86_64.h"
 
 #define MAX_LEN_STR_ARG 42
 #define MAX_ARGS 6
@@ -35,6 +33,7 @@ typedef struct syscall_x86_64_s {
 
 extern const char      *prog_name;
 extern syscall_x86_64_t syscalls_x86_64[];
+extern char*            errno_ent[];
 
 void child_exec(char **argv, char **envp);
 void handle_syscall_io(int pid);

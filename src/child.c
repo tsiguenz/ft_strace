@@ -1,4 +1,5 @@
 #include "ft_strace.h"
+#include <errno.h>
 
 void child_exec(char **argv, char **envp) {
   // wait when the parent is ready
