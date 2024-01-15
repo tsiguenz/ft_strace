@@ -1,4 +1,5 @@
 #include "ft_strace.h"
+#include <errno.h>
 
 static bool get_str_from_process(int pid, uint64_t address, char *arg) {
   ssize_t      nread;

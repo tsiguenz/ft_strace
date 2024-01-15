@@ -1,4 +1,5 @@
 #include "ft_strace.h"
+#include <errno.h>
 
 void handle_syscall_io(int pid) {
   static bool       print           = false;
@@ -52,12 +53,10 @@ int trace_syscalls(int pid) {
   for (; 42;) {
     status = 0;
     ptrace(PTRACE_SYSCALL, pid, 0, 0);
-    if (waitpid(pid, &status, 0) == -1) {
+    if (waitpid(pid, &status, 0) == -1)
       FATAL("%s: waitpid(): %s\n", prog_name, strerror(errno));
-    }
     if (WIFEXITED(status)) {
       fprintf(stderr, ") = ?\n+++ exited with %d +++\n", WEXITSTATUS(status));
-      // fprintf(stderr, "errno: %d = %s\n", errno, strerror(errno));
       exit(WEXITSTATUS(status));
     } else if (WIFSIGNALED(status)) {
       printf("killed by signal %d\n", WTERMSIG(status));
