@@ -5,28 +5,58 @@ import sys
 from signal import signal, SIGPIPE, SIG_DFL
 
 
+FORMAT_TRANSFORM = {
+    # every types not here are defined as %lx
+    'int':              '%d',
+    'size_t':           '%d',
+    'off_t':            '%d',
+    'pid_t':            '%d',
+    'loff_t':           '%d',
+    'umode_t':          '%d',
+    'rwf_t':            '%d',
+    'gid_t':            '%d',
+    'uid_t':            '%d',
+    'unsigned':         '%u',
+    'char':             '%c',
+}
+
+
+# TODO: need to implement this
 def add_backslash_to_end(string):
     print(string)
 
 
-def delete_arg_name(arg):
+def transform_arg(arg):
+    if arg.count('*') >= 2:
+        return '%p'
+    if 'char' in arg and '*' in arg:
+        return '"%s"'
+    if '*' in arg:
+        return '%p'
     arg = list(arg.split(' '))
-    if len(arg) > 1:
-        arg.pop(-1)
+    for word in arg:
+        if word in list(FORMAT_TRANSFORM.keys()):
+            return FORMAT_TRANSFORM[word]
+    if '?' not in arg:
+        return '%lx'
     arg = ' '.join(arg)
+    return arg
+
+
+def format_arg(arg):
+    arg = transform_arg(arg)
     return arg
 
 
 def get_fString(s):
     nr = s['nr']
     name = s['name']
-    argumentsList = (s['arg0'], s['arg1'], s['arg2'],
-                     s['arg3'], s['arg4'], s['arg5'])
-    argumentsList = [arg for arg in argumentsList if arg]
-    argumentsList = [delete_arg_name(arg) for arg in argumentsList]
-    print(argumentsList)
+    argumentsList = [s['arg0'], s['arg1'], s['arg2'],
+                     s['arg3'], s['arg4'], s['arg5']]
+    argumentsList = [format_arg(arg) for arg in argumentsList if arg]
     fString = f'[{nr}] = {{ "{name}", "%s('
     fString += ', '.join(map(str, argumentsList))
+    fString += '" },'
     return fString
 
 
@@ -56,4 +86,4 @@ if __name__ == '__main__':
     syscallList = get_sorted_syscall_list(arch)
     for syscall in syscallList:
         fString = get_fString(syscall)
-        # print(fString)
+        print(fString)
