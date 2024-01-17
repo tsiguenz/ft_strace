@@ -15,6 +15,10 @@ void print_regs(int pid, union user_regs_t regs, struct iovec io) {
   }
 }
 
+static void print_out_kernel_space(char *errno_ent, char *str_error) {
+  fprintf(stderr, ") = -1 %s (%s)\n", errno_ent, str_error);
+}
+
 void print_in_kernel_space_64(int pid, struct x86_64_user_regs_struct registers,
                               syscall_t syscall) {
   char str_params[MAX_ARGS][MAX_LEN_STR_ARG] = {0};
@@ -28,8 +32,7 @@ void print_out_kernel_space_64(struct x86_64_user_regs_struct registers) {
   if (ret_val >= 0)
     fprintf(stderr, ") = %ld\n", ret_val);
   else
-    fprintf(stderr, ") = -1 %s (%s)\n", errno_ent[-ret_val],
-            strerror(-ret_val));
+    print_out_kernel_space(errno_ent[-ret_val], strerror(-ret_val));
 }
 
 void print_in_kernel_space_32(struct i386_user_regs_struct registers,
@@ -39,5 +42,9 @@ void print_in_kernel_space_32(struct i386_user_regs_struct registers,
 }
 
 void print_out_kernel_space_32(struct i386_user_regs_struct registers) {
-  fprintf(stderr, ") = %u\n", registers.eax);
+  int32_t ret_val = registers.eax;
+  if (ret_val >= 0)
+    fprintf(stderr, ") = %d\n", ret_val);
+  else
+    print_out_kernel_space(errno_ent[-ret_val], strerror(-ret_val));
 }

@@ -17,11 +17,9 @@ FORMAT_TRANSFORM = {
     'gid_t':            '%d',
     'uid_t':            '%d',
     'char':             '%c',
-    'unsigned':         '0x%lx',
 }
 
 
-# TODO: need to implement this
 def add_backslash_to_end(string):
     nbOfSpaces = 80 - len(string)
     string += ' ' * (nbOfSpaces - 1)
