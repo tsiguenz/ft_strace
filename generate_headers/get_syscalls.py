@@ -16,21 +16,24 @@ FORMAT_TRANSFORM = {
     'rwf_t':            '%d',
     'gid_t':            '%d',
     'uid_t':            '%d',
-    'unsigned':         '%u',
     'char':             '%c',
+    'unsigned':         '0x%lx',
 }
 
 
 # TODO: need to implement this
 def add_backslash_to_end(string):
-    print(string)
+    nbOfSpaces = 80 - len(string)
+    string += ' ' * (nbOfSpaces - 1)
+    string += '\\'
+    return string
 
 
 def transform_arg(arg):
     if arg.count('*') >= 2:
         return '%p'
     if 'char' in arg and '*' in arg:
-        return '"%s"'
+        return '\\"%s\\"'
     if '*' in arg:
         return '%p'
     arg = list(arg.split(' '))
@@ -38,14 +41,8 @@ def transform_arg(arg):
         if word in list(FORMAT_TRANSFORM.keys()):
             return FORMAT_TRANSFORM[word]
     if '?' not in arg:
-        return '%lx'
-    arg = ' '.join(arg)
-    return arg
-
-
-def format_arg(arg):
-    arg = transform_arg(arg)
-    return arg
+        return '0x%lx'
+    return ' '.join(arg)
 
 
 def get_fString(s):
@@ -53,18 +50,20 @@ def get_fString(s):
     name = s['name']
     argumentsList = [s['arg0'], s['arg1'], s['arg2'],
                      s['arg3'], s['arg4'], s['arg5']]
-    argumentsList = [format_arg(arg) for arg in argumentsList if arg]
+    argumentsList = [transform_arg(arg) for arg in argumentsList if arg]
     fString = f'[{nr}] = {{ "{name}", "%s('
     fString += ', '.join(map(str, argumentsList))
     fString += '" },'
+    fString = add_backslash_to_end(fString)
     return fString
 
 
 def get_sorted_syscall_list(arch):
     url = f'https://api.syscall.sh/v1/syscalls/{arch}'
     response = requests.get(url)
-    if response.status_code != 200:
-        print(f"Error, bad request at url: {url}")
+    # code response is always 200
+    if len(response.text) <= 3:
+        print(f'Error, bad request at url: {url}')
         exit(1)
     responseJson = response.json()
     return sorted(responseJson, key=lambda d: d['nr'])
@@ -74,7 +73,7 @@ def get_arch_from_argv():
     try:
         arch = sys.argv[1]
     except Exception:
-        print(f"Usage: {sys.argv[0]} ARCH (x64 or x86)")
+        print(f'Usage: {sys.argv[0]} ARCH (x64 or x86)')
         exit(1)
     return arch
 

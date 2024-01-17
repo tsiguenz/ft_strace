@@ -1,13 +1,13 @@
-#include <errno.h>
-#include "ft_strace.h"
-#include "syscalls_x86_64.h"
 #include "errno_ent.h"
+#include "ft_strace.h"
+#include "syscalls_32.h"
+#include "syscalls_64.h"
+#include <errno.h>
 
-const char      *prog_name;
-syscall_x86_64_t syscalls_x86_64[] = {SYSCALLS_ENT_X86_64};
-// TODO: add i386 syscalls
-syscall_x86_64_t syscalls_i386[] = {SYSCALLS_ENT_X86_64};
-char* errno_ent[] = {ERRNO_ENT};
+const char *prog_name;
+syscall_t   syscalls_64[] = {SYSCALLS_ENT_64};
+syscall_t   syscalls_32[] = {SYSCALLS_ENT_32};
+char       *errno_ent[]   = {ERRNO_ENT};
 
 int strace(char **argv, char **envp) {
   pid_t pid = fork();
