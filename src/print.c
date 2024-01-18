@@ -1,9 +1,10 @@
 #include "ft_strace.h"
 
-void print_regs(union user_regs_t regs, struct iovec io) {
+void print_regs(int pid, union user_regs_t regs, struct iovec io) {
   if (io.iov_len == sizeof(regs.regs64)) {
     struct x86_64_user_regs_struct current_regs = regs.regs64;
-    syscall_x86_64_t syscall = syscalls_x86_64[current_regs.orig_rax];
+    syscall_t                      syscall = syscalls_64[current_regs.orig_rax];
+    printf("pid = %d\n", pid);
     printf("syscall = %lu, %s\n", current_regs.orig_rax, syscall.name);
     printf("rdi = 0x%lx\n", current_regs.rdi);
     printf("rsi = 0x%lx\n", current_regs.rsi);
@@ -14,22 +15,36 @@ void print_regs(union user_regs_t regs, struct iovec io) {
   }
 }
 
-void print_in_kernel_space_x86_64(struct x86_64_user_regs_struct registers,
-                                  syscall_x86_64_t               syscall) {
+static void print_out_kernel_space(char *errno_ent, char *str_error) {
+  fprintf(stderr, ") = -1 %s (%s)\n", errno_ent, str_error);
+}
+
+void print_in_kernel_space_64(int pid, struct x86_64_user_regs_struct registers,
+                              syscall_t syscall) {
+  char str_params[MAX_ARGS][MAX_LEN_STR_ARG] = {0};
+  set_str_params_to_regs(pid, &registers, syscall.format, str_params);
   fprintf(stderr, syscall.format, syscall.name, registers.rdi, registers.rsi,
           registers.rdx, registers.rcx, registers.r8, registers.r9);
 }
 
-void print_out_kernel_space_x86_64(struct x86_64_user_regs_struct registers) {
-  fprintf(stderr, ") = %lu\n", registers.rax);
+void print_out_kernel_space_64(struct x86_64_user_regs_struct registers) {
+  int64_t ret_val = registers.rax;
+  if (ret_val >= 0)
+    fprintf(stderr, ") = %ld\n", ret_val);
+  else
+    print_out_kernel_space(errno_ent[-ret_val], strerror(-ret_val));
 }
 
-void print_in_kernel_space_i386(struct i386_user_regs_struct registers,
-                                syscall_x86_64_t             syscall) {
+void print_in_kernel_space_32(struct i386_user_regs_struct registers,
+                              syscall_t                    syscall) {
   fprintf(stderr, syscall.format, syscall.name, registers.ebx, registers.ecx,
           registers.edx, registers.esi, registers.edi, registers.ebp);
 }
 
-void print_out_kernel_space_i386(struct i386_user_regs_struct registers) {
-  fprintf(stderr, ") = %u\n", registers.eax);
+void print_out_kernel_space_32(struct i386_user_regs_struct registers) {
+  int32_t ret_val = registers.eax;
+  if (ret_val >= 0)
+    fprintf(stderr, ") = %d\n", ret_val);
+  else
+    print_out_kernel_space(errno_ent[-ret_val], strerror(-ret_val));
 }

@@ -19,3 +19,4 @@ ft_strace
 *.test*
 .vagrant
 test/*_*
+*.null-ls*

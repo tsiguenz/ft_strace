@@ -15,6 +15,7 @@ SRC_NAME =	main.c	 \
 						tracer.c \
 						print.c  \
 						utils.c  \
+						set_str_params_to_regs.c \
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
