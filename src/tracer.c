@@ -18,7 +18,7 @@ void handle_syscall_io(int pid) {
     struct x86_64_user_regs_struct current_regs   = regs.regs64;
     uint64_t                       syscall_number = current_regs.orig_rax;
     syscall_t                      syscall = set_syscall_64(syscall_number);
-    if (!is_child_call(&print, &in_kernel_space, syscall.name))
+    if (!is_execve(&print, &in_kernel_space, syscall.name))
       return;
     if (in_kernel_space) {
       print_in_kernel_space_64(pid, current_regs, syscall);
@@ -31,7 +31,7 @@ void handle_syscall_io(int pid) {
     struct i386_user_regs_struct current_regs   = regs.regs32;
     uint32_t                     syscall_number = current_regs.orig_eax;
     syscall_t                    syscall = set_syscall_64(syscall_number);
-    if (!is_child_call(&print, &in_kernel_space, syscall.name))
+    if (!is_execve(&print, &in_kernel_space, syscall.name))
       return;
     if (in_kernel_space) {
       print_in_kernel_space_32(current_regs, syscall);

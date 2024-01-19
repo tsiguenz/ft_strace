@@ -17,7 +17,7 @@ void disable_signals(void) {
   sigprocmask(SIG_BLOCK, &block, NULL);
 }
 
-bool is_child_call(bool *print, bool *in_kernel_space,
+bool is_execve(bool *print, bool *in_kernel_space,
                    const char *syscall_name) {
   if (*print == false && strcmp("execve", syscall_name) == 0) {
     *print           = true;
