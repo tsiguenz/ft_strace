@@ -2,6 +2,7 @@
 #define SYSCALLS_32_H
 // clang-format off
 #define SYSCALLS_NBR_32 385
+#define UNRECONGNIZE_SYSCALL { "unrecognize_syscall", "%s(" }
 #define SYSCALLS_ENT_32                                                        \
 [0] = { "restart_syscall", "%s(" },                                            \
 [1] = { "exit", "%s(%d" },                                                     \
@@ -93,7 +94,7 @@
 [87] = { "swapon", "%s(\"%s\", %d" },                                          \
 [88] = { "reboot", "%s(%d, %d, %d, %p" },                                      \
 [89] = { "readdir", "%s(?, ?, ?, ?, ?, ?" },                                   \
-[90] = { "mmap", "%s(?, ?, ?, ?, ?, ?" },                                      \
+[90] = { "mmap", "%s(%p, %lu, %d, %d, %d, %d" },                               \
 [91] = { "munmap", "%s(0x%lx, %d" },                                           \
 [92] = { "truncate", "%s(\"%s\", 0x%lx" },                                     \
 [93] = { "ftruncate", "%s(%d, 0x%lx" },                                        \

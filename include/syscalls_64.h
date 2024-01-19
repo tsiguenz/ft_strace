@@ -1,7 +1,8 @@
 #ifndef SYSCALLS_64_H
 #define SYSCALLS_64_H
 // clang-format off
-#define SYSCALLS_NBR_64 328
+#define SYSCALLS_NBR_64 333
+#define UNRECONGNIZE_SYSCALL { "unrecognize_syscall", "%s(" }
 #define SYSCALLS_ENT_64                                                        \
 [0] = { "read", "%s(%d, \"%s\", %d" },                                         \
 [1] = { "write", "%s(%d, \"%s\", %d" },                                        \
@@ -12,7 +13,7 @@
 [6] = { "lstat", "%s(\"%s\", %p" },                                            \
 [7] = { "poll", "%s(%p, %d, %d" },                                             \
 [8] = { "lseek", "%s(%d, %d, %d" },                                            \
-[9] = { "mmap", "%s(?, ?, ?, ?, ?, ?" },                                       \
+[9] = { "mmap", "%s(%p, %lu, %d, %d, %d, %d" },                                \
 [10] = { "mprotect", "%s(0x%lx, %d, 0x%lx" },                                  \
 [11] = { "munmap", "%s(0x%lx, %d" },                                           \
 [12] = { "brk", "%s(0x%lx" },                                                  \
