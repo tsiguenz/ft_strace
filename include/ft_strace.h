@@ -18,7 +18,7 @@
 
 #include "registers.h"
 
-#define MAX_LEN_STR_ARG 42
+#define MAX_LEN_STR_ARG 32
 #define MAX_ARGS 6
 
 #define FATAL(...)                                                             \
@@ -32,10 +32,10 @@ typedef struct syscall_s {
   char *format;
 } syscall_t;
 
-extern const char      *prog_name;
+extern const char  *prog_name;
 extern syscall_t   syscalls_64[];
 extern syscall_t   syscalls_32[];
-extern char*            errno_ent[];
+extern char*       errno_ent[];
 
 void child_exec(char **argv, char **envp);
 void handle_syscall_io(int pid);
@@ -49,6 +49,8 @@ void print_in_kernel_space_32(struct i386_user_regs_struct registers,
 void print_out_kernel_space_32(struct i386_user_regs_struct registers);
 bool is_child_call(bool *print, bool *in_kernel_space,
                    const char *syscall_name);
+syscall_t set_syscall_64(uint64_t syscall_number);
+syscall_t set_syscall_32(uint32_t syscall_number);
 void disable_signals(void);
 
 void set_str_params_to_regs(int pid, struct x86_64_user_regs_struct *registers,
