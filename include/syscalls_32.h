@@ -2,7 +2,6 @@
 #define SYSCALLS_32_H
 // clang-format off
 #define SYSCALLS_NBR_32 385
-#define UNRECONGNIZE_SYSCALL { "unrecognize_syscall", "%s(" }
 #define SYSCALLS_ENT_32                                                        \
 [0] = { "restart_syscall", "%s(" },                                            \
 [1] = { "exit", "%s(%d" },                                                     \
@@ -196,7 +195,7 @@
 [189] = { "putpmsg", "%s(?, ?, ?, ?, ?, ?" },                                  \
 [190] = { "vfork", "%s(" },                                                    \
 [191] = { "ugetrlimit", "%s(?, ?, ?, ?, ?, ?" },                               \
-[192] = { "mmap2", "%s(?, ?, ?, ?, ?, ?" },                                    \
+[192] = { "mmap", "%s(%p, %lu, %d, %d, %d, %d" },                              \
 [193] = { "truncate64", "%s(\"%s\", %d" },                                     \
 [194] = { "ftruncate64", "%s(%d, %d" },                                        \
 [195] = { "stat64", "%s(\"%s\", %p" },                                         \
