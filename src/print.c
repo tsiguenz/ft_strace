@@ -15,36 +15,22 @@ void print_regs(int pid, union user_regs_t regs, struct iovec io) {
   }
 }
 
-static void print_out_kernel_space(char *errno_ent, char *str_error) {
-  fprintf(stderr, ") = -1 %s (%s)\n", errno_ent, str_error);
-}
-
-void print_in_kernel_space_64(int pid, struct x86_64_user_regs_struct registers,
-                              syscall_t syscall) {
+void print_in_kernel_space(int pid, struct x86_64_user_regs_struct registers,
+                           syscall_t syscall) {
   char str_params[MAX_ARGS][MAX_LEN_STR_ARG] = {0};
   set_str_params_to_regs(pid, &registers, syscall.format, str_params);
   fprintf(stderr, syscall.format, syscall.name, registers.rdi, registers.rsi,
           registers.rdx, registers.rcx, registers.r8, registers.r9);
 }
 
-void print_out_kernel_space_64(struct x86_64_user_regs_struct registers) {
+void print_out_kernel_space(struct x86_64_user_regs_struct registers) {
   int64_t ret_val = registers.rax;
   if (ret_val >= 0)
-    fprintf(stderr, ") = %ld\n", ret_val);
+    if (ret_val > 10.000)
+      fprintf(stderr, ") = 0x%lx\n", ret_val);
+    else
+      fprintf(stderr, ") = %ld\n", ret_val);
   else
-    print_out_kernel_space(errno_ent[-ret_val], strerror(-ret_val));
-}
-
-void print_in_kernel_space_32(struct i386_user_regs_struct registers,
-                              syscall_t                    syscall) {
-  fprintf(stderr, syscall.format, syscall.name, registers.ebx, registers.ecx,
-          registers.edx, registers.esi, registers.edi, registers.ebp);
-}
-
-void print_out_kernel_space_32(struct i386_user_regs_struct registers) {
-  int32_t ret_val = registers.eax;
-  if (ret_val >= 0)
-    fprintf(stderr, ") = %d\n", ret_val);
-  else
-    print_out_kernel_space(errno_ent[-ret_val], strerror(-ret_val));
+    fprintf(stderr, ") = -1 %s (%s)\n", errno_ent[-ret_val],
+            strerror(-ret_val));
 }

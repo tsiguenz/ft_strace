@@ -2,7 +2,6 @@
 #define SYSCALLS_64_H
 // clang-format off
 #define SYSCALLS_NBR_64 333
-#define UNRECONGNIZE_SYSCALL { "unrecognize_syscall", "%s(" }
 #define SYSCALLS_ENT_64                                                        \
 [0] = { "read", "%s(%d, \"%s\", %d" },                                         \
 [1] = { "write", "%s(%d, \"%s\", %d" },                                        \
