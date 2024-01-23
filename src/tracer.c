@@ -47,29 +47,34 @@ void handle_syscall_io(int pid) {
   }
 }
 
+void handler(int signal) { printf("Signal %d is caughed !\n", signal); }
+
 int trace_syscalls(int pid) {
   int       status;
-  // siginfo_t sig;
+  siginfo_t sig;
   ptrace(PTRACE_SEIZE, pid, 0, 0);
   ptrace(PTRACE_INTERRUPT, pid, 0, 0);
+  signal(SIGINT, handler);
   disable_signals();
-  waitpid(pid, 0, 0);  // child wait when parent is ready
   for (; 42;) {
     status = 0;
     ptrace(PTRACE_SYSCALL, pid, 0, 0);
-    //    ptrace(PTRACE_GETSIGINFO, pid, 0, &sig);
-    //    printf("is user signal: %d\n", sig.si_code == SI_USER);
     if (waitpid(pid, &status, 0) == -1)
       FATAL("%s: waitpid(): %s\n", prog_name, strerror(errno));
-    if (WIFEXITED(status)) {
-      fprintf(stderr, ") = ?\n+++ exited with %d +++\n", WEXITSTATUS(status));
-      exit(WEXITSTATUS(status));
+    if (WIFSTOPPED(status)) {
+      int signal = WSTOPSIG(status);
+      ptrace(PTRACE_GETSIGINFO, pid, 0, &sig);
+      printf("is user signal: %d, SIG%s\n", sig.si_code == SI_USER,
+             signals_abbrev[signal]);
+      // handle_syscall_io(pid);
+    } else if (WTERMSIG(status)) {
+      printf("killed by signal %d\n", WTERMSIG(status));
+    } else if (WIFEXITED(status)) {
+      int ret_value = WEXITSTATUS(status);
+      fprintf(stderr, ") = ?\n+++ exited with %d +++\n", ret_value);
+      exit(ret_value);
     } else if (WIFSIGNALED(status)) {
       printf("killed by signal %d\n", WTERMSIG(status));
-    } else if (WIFSTOPPED(status)) {
-      handle_syscall_io(pid);
-    } else if (WIFCONTINUED(status)) {
-      printf("continued\n");
     }
   }
 }

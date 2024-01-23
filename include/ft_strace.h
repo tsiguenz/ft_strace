@@ -37,6 +37,7 @@ extern const char *prog_name;
 extern syscall_t   syscalls_64[];
 extern syscall_t   syscalls_32[];
 extern char       *errno_ent[];
+extern char       *signals_abbrev[];
 
 void child_exec(char **argv, char **envp);
 void handle_syscall_io(int pid);
