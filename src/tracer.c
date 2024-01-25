@@ -15,8 +15,9 @@ set_regs32_to_current_regs(struct x86_64_user_regs_struct *current_regs,
 }
 
 void handle_syscall_io(int pid) {
-  static bool       print           = false;
-  static bool       in_kernel_space = false;
+  static bool print           = false;
+  static bool in_kernel_space = false;
+  // printf("kernel space = %s\n", in_kernel_space ? "yes" : "no");
   union user_regs_t regs;
   struct iovec      io = {
            .iov_base = &regs,
@@ -47,34 +48,39 @@ void handle_syscall_io(int pid) {
   }
 }
 
-void handler(int signal) { printf("Signal %d is caughed !\n", signal); }
-
 int trace_syscalls(int pid) {
-  int       status;
-  siginfo_t sig;
-  ptrace(PTRACE_SEIZE, pid, 0, 0);
-  ptrace(PTRACE_INTERRUPT, pid, 0, 0);
-  signal(SIGINT, handler);
+  int       signal = 0;
+  siginfo_t sig    = {0};
   disable_signals();
+  ptrace(PTRACE_SEIZE, pid, 0, 0);
+  // ptrace(PTRACE_SEIZE, pid, 0, 0);
+  ptrace(PTRACE_INTERRUPT, pid, 0, 0);
+  ptrace(PTRACE_SYSCALL, pid, 0, 0);
   for (; 42;) {
-    status = 0;
-    ptrace(PTRACE_SYSCALL, pid, 0, 0);
+    printf("\nbegin loop\n");
+    int status = 0;
     if (waitpid(pid, &status, 0) == -1)
       FATAL("%s: waitpid(): %s\n", prog_name, strerror(errno));
     if (WIFSTOPPED(status)) {
-      int signal = WSTOPSIG(status);
       ptrace(PTRACE_GETSIGINFO, pid, 0, &sig);
-      printf("is user signal: %d, SIG%s\n", sig.si_code == SI_USER,
-             signals_abbrev[signal]);
-      // handle_syscall_io(pid);
-    } else if (WTERMSIG(status)) {
-      printf("killed by signal %d\n", WTERMSIG(status));
-    } else if (WIFEXITED(status)) {
+      signal = WSTOPSIG(status);
+      printf("\nSIG%s\n", signals_abbrev[signal]);
+      // identify if it's syscall stop or signal stop to enter in handle syscall
+      handle_syscall_io(pid);
+      if (signal == SIGTRAP)
+        signal = 0;
+      ptrace(PTRACE_SYSCALL, pid, 0, signal);
+    }
+    if (WIFEXITED(status)) {
       int ret_value = WEXITSTATUS(status);
       fprintf(stderr, ") = ?\n+++ exited with %d +++\n", ret_value);
       exit(ret_value);
-    } else if (WIFSIGNALED(status)) {
-      printf("killed by signal %d\n", WTERMSIG(status));
+    }
+    if (WIFSIGNALED(status)) {
+      char *signal_name = signals_abbrev[WTERMSIG(status)];
+      // print signal informations
+      fprintf(stderr, ") = ?\n+++ killed by SIG%s +++\n", signal_name);
+      exit(WIFEXITED(status));
     }
   }
 }
