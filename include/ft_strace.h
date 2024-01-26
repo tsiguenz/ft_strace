@@ -17,7 +17,9 @@
 
 #include "registers.h"
 
+#define ERESTARTSYS 512
 #define MAX_LEN_STR_ARG 32
+#define MAX_LEN_ERRNO 133
 #define MAX_ARGS 6
 #define UNRECONGNIZE_SYSCALL                                                   \
   { "unrecognize_syscall", "%s(" }
