@@ -18,13 +18,16 @@ void disable_signals(void) {
   sigprocmask(SIG_BLOCK, &block, NULL);
 }
 
-bool is_execve(bool *print, bool *in_kernel_space,
+bool execve_is_done(bool *in_kernel_space,
                    const char *syscall_name) {
-  if (*print == false && strcmp("execve", syscall_name) == 0) {
-    *print           = true;
+  static bool execve_is_done = false;
+  if (in_kernel_space == NULL || syscall_name == NULL)
+    return execve_is_done;
+  if (execve_is_done == false && strcmp("execve", syscall_name) == 0) {
+    execve_is_done           = true;
     *in_kernel_space = true;
   }
-  return *print == true;
+  return execve_is_done;
 }
 
 syscall_t set_syscall_64(uint64_t syscall_number) {

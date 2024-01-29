@@ -15,9 +15,7 @@ set_regs32_to_current_regs(struct x86_64_user_regs_struct *current_regs,
 }
 
 void handle_syscall_io(int pid) {
-  static bool print           = false;
-  static bool in_kernel_space = false;
-  // printf("kernel space = %s\n", in_kernel_space ? "yes" : "no");
+  static bool       in_kernel_space = false;
   union user_regs_t regs;
   struct iovec      io = {
            .iov_base = &regs,
@@ -37,7 +35,7 @@ void handle_syscall_io(int pid) {
   uint64_t  syscall_number = current_regs.orig_rax;
   syscall_t syscall        = is_64_bits ? set_syscall_64(syscall_number)
                                         : set_syscall_32(syscall_number);
-  if (!is_execve(&print, &in_kernel_space, syscall.name))
+  if (!execve_is_done(&in_kernel_space, syscall.name))
     return;
   if (in_kernel_space) {
     print_in_kernel_space(pid, current_regs, syscall);
@@ -64,20 +62,22 @@ int trace_syscalls(int pid) {
   disable_signals();
   ptrace(PTRACE_SEIZE, pid, 0, 0);
   ptrace(PTRACE_INTERRUPT, pid, 0, 0);
-  ptrace(PTRACE_SYSCALL, pid, 0, 0);
+  ptrace(PTRACE_SYSCALL, pid, 0, PTRACE_O_TRACEEXEC);
   for (; 42;) {
     int status = 0;
     if (waitpid(pid, &status, 0) == -1)
       FATAL("%s: waitpid(): %s\n", prog_name, strerror(errno));
     if (WIFSTOPPED(status)) {
+      if (status >> 8 == (SIGTRAP | (PTRACE_EVENT_EXEC << 8)))
+        printf("is execve\n");
       ptrace(PTRACE_GETSIGINFO, pid, 0, &sig);
       signal = WSTOPSIG(status);
-      if (sig.si_code == SIGTRAP || sig.si_code == (SIGTRAP | 0x80))
+      if (sig.si_code == SIGTRAP || sig.si_code == (SIGTRAP | 0x80)) {
         handle_syscall_io(pid);
-      else
-        handle_signal(sig);
-      if (signal == SIGTRAP)
         signal = 0;
+      } else if (execve_is_done(NULL, NULL)) {
+        handle_signal(sig);
+      }
       ptrace(PTRACE_SYSCALL, pid, 0, signal);
     }
     if (WIFEXITED(status)) {
