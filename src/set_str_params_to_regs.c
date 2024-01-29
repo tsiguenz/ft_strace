@@ -65,7 +65,7 @@ void set_str_params_to_regs(int pid, struct x86_64_user_regs_struct *registers,
     }
     return_value = get_str_from_process(pid, *reg, str_params[i]);
     if (return_value)
-      FATAL("%s: process_vm_readv(): %s\n", prog_name, strerror(errno));
+      reg = NULL;
     *reg = (uint64_t) str_params[i];
   }
 }

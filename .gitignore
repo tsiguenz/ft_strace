@@ -20,3 +20,4 @@ ft_strace
 .vagrant
 test/*_*
 *.null-ls*
+tags

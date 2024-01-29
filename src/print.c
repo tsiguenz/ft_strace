@@ -25,12 +25,19 @@ void print_in_kernel_space(int pid, struct x86_64_user_regs_struct registers,
 
 void print_out_kernel_space(struct x86_64_user_regs_struct registers) {
   int64_t ret_val = registers.rax;
-  if (ret_val >= 0)
-    if (ret_val > 10.000)
+  if (ret_val >= 0) {
+    if (ret_val > 10000)
       fprintf(stderr, ") = 0x%lx\n", ret_val);
     else
       fprintf(stderr, ") = %ld\n", ret_val);
-  else
-    fprintf(stderr, ") = -1 %s (%s)\n", errno_ent[-ret_val],
+  } else  {
+    // case when syscall-exit-stop because signal was caught
+    // 512 to 530 are linux errnos and don't have description in strerror
+    if (-ret_val >= 512 && -ret_val <= 530) {
+      fprintf(stderr, ") = ? %s\n", errno_ent[-ret_val]);
+    } else {
+      fprintf(stderr, ") = -1 %s (%s)\n", errno_ent[-ret_val],
             strerror(-ret_val));
+    }
+  }
 }

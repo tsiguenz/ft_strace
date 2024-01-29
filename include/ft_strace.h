@@ -17,7 +17,9 @@
 
 #include "registers.h"
 
+#define ERESTARTSYS 512
 #define MAX_LEN_STR_ARG 32
+#define MAX_LEN_ERRNO 133
 #define MAX_ARGS 6
 #define UNRECONGNIZE_SYSCALL                                                   \
   { "unrecognize_syscall", "%s(" }
@@ -37,6 +39,7 @@ extern const char *prog_name;
 extern syscall_t   syscalls_64[];
 extern syscall_t   syscalls_32[];
 extern char       *errno_ent[];
+extern char       *signals_abbrev[];
 
 void child_exec(char **argv, char **envp);
 void handle_syscall_io(int pid);
@@ -45,7 +48,7 @@ void print_regs(int pid, union user_regs_t regs, struct iovec io);
 void print_in_kernel_space(int pid, struct x86_64_user_regs_struct registers,
                            syscall_t syscall);
 void print_out_kernel_space(struct x86_64_user_regs_struct registers);
-bool is_execve(bool *print, bool *in_kernel_space, const char *syscall_name);
+bool execve_is_done(bool *in_kernel_space, const char *syscall_name);
 void disable_signals(void);
 void set_str_params_to_regs(int pid, struct x86_64_user_regs_struct *registers,
                             char *syscall_format,

@@ -136,6 +136,23 @@
 [130] = "EOWNERDEAD",                                                          \
 [131] = "ENOTRECOVERABLE",                                                     \
 [132] = "ERFKILL",                                                             \
-[133] = "EHWPOISON"
+[133] = "EHWPOISON",                                                           \
+[512] = "ERESTARTSYS (To be restarted if SA_RESTART is set)",                  \
+[513] = "ERESTARTNOINTR",                                                      \
+[514] = "ERESTARTNOHAND",                                                      \
+[515] = "ENOIOCTLCMD",                                                         \
+[516] = "ERESTART_RESTARTBLOCK (Interrupted by signal)",                       \
+[517] = "EPROBE_DEFER",                                                        \
+[518] = "EOPENSTALE",                                                          \
+[521] = "EBADHANDLE",                                                          \
+[522] = "ENOTSYNC",                                                            \
+[523] = "EBADCOOKIE",                                                          \
+[524] = "ENOTSUPP",                                                            \
+[525] = "ETOOSMALL",                                                           \
+[526] = "ESERVERFAULT",                                                        \
+[527] = "EBADTYPE",                                                            \
+[528] = "EJUKEBOX",                                                            \
+[529] = "EIOCBQUEUED",                                                         \
+[530] = "EIOCBRETRY"
 
 #endif  // ERRNO_H

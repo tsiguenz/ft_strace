@@ -1,14 +1,16 @@
 #include "errno_ent.h"
 #include "ft_strace.h"
+#include "signals_abbrev.h"
 #include "syscalls_32.h"
 #include "syscalls_64.h"
 #include <errno.h>
 #include <sys/stat.h>
 
 const char *prog_name;
-syscall_t   syscalls_64[] = {SYSCALLS_ENT_64};
-syscall_t   syscalls_32[] = {SYSCALLS_ENT_32};
-char       *errno_ent[]   = {ERRNO_ENT};
+syscall_t   syscalls_64[]    = {SYSCALLS_ENT_64};
+syscall_t   syscalls_32[]    = {SYSCALLS_ENT_32};
+char       *errno_ent[]      = {ERRNO_ENT};
+char       *signals_abbrev[] = {SIGNALS_ABBREV};
 
 void check_and_set_exec_name(char **exec_name) {
   if (strlen(*exec_name) == 0)
