@@ -46,14 +46,14 @@ void handle_syscall_io(int pid) {
   }
 }
 
-//— SIGHUP {si_signo=SIGHUP, si_code=SI_USER, si_pid=11583, si_uid=1000} —
 void handle_signal(siginfo_t signal) {
-  char *signo  = signals_abbrev[signal.si_signo];
-  char *sicode = signal.si_code == SI_USER ? "SI_USER" : "SI_KERNEL";
+  if (signal.si_code != SI_USER)
+    return;
+  char *signo = signals_abbrev[signal.si_signo];
 
   fprintf(stderr,
           "--- SIG%s {si_signo=SIG%s, si_code=%s, si_pid=%d, si_uid=%d} ---\n",
-          signo, signo, sicode, signal.si_pid, signal.si_uid);
+          signo, signo, "SI_USER", signal.si_pid, signal.si_uid);
 }
 
 int trace_syscalls(int pid) {
