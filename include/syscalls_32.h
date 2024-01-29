@@ -1,7 +1,7 @@
 #ifndef SYSCALLS_32_H
 #define SYSCALLS_32_H
 // clang-format off
-#define SYSCALLS_NBR_32 385
+#define SYSCALLS_NBR_32 441
 #define SYSCALLS_ENT_32                                                        \
 [0] = { "restart_syscall", "%s(" },                                            \
 [1] = { "exit", "%s(%d" },                                                     \
@@ -387,5 +387,61 @@
 [381] = { "pkey_alloc", "%s(0x%lx, 0x%lx" },                                   \
 [382] = { "pkey_free", "%s(%d" },                                              \
 [383] = { "statx", "%s(%d, \"%s\", 0x%lx, 0x%lx, %p" },                        \
-[384] = { "arch_prctl", "%s(?, ?, ?, ?, ?, ?" },
+[384] = { "arch_prctl", "%s(?, ?, ?, ?, ?, ?" },                               \
+[385] = { "io_pgetevents", "%s(" },                                            \
+[386] = { "rseq", "%s(" },                                                     \
+[387] = { "not_implemented", "%s(" },                                          \
+[388] = { "not_implemented", "%s(" },                                          \
+[389] = { "not_implemented", "%s(" },                                          \
+[390] = { "not_implemented", "%s(" },                                          \
+[391] = { "not_implemented", "%s(" },                                          \
+[392] = { "not_implemented", "%s(" },                                          \
+[393] = { "semget", "%s(" },                                                   \
+[394] = { "semctl", "%s(" },                                                   \
+[395] = { "shmget", "%s(" },                                                   \
+[396] = { "shmctl", "%s(" },                                                   \
+[397] = { "shmat", "%s(" },                                                    \
+[398] = { "shmdt", "%s(" },                                                    \
+[399] = { "msgget", "%s(" },                                                   \
+[400] = { "msgsnd", "%s(" },                                                   \
+[401] = { "msgrcv", "%s(" },                                                   \
+[402] = { "msgctl", "%s(" },                                                   \
+[403] = { "clock_gettime64", "%s(" },                                          \
+[404] = { "clock_settime64", "%s(" },                                          \
+[405] = { "clock_adjtime64", "%s(" },                                          \
+[406] = { "clock_getres_time64", "%s(" },                                      \
+[407] = { "clock_nanosleep_time64", "%s(" },                                   \
+[408] = { "timer_gettime64", "%s(" },                                          \
+[409] = { "timer_settime64", "%s(" },                                          \
+[410] = { "timerfd_gettime64", "%s(" },                                        \
+[411] = { "timerfd_settime64", "%s(" },                                        \
+[412] = { "utimensat_time64", "%s(" },                                         \
+[413] = { "pselect6_time64", "%s(" },                                          \
+[414] = { "ppoll_time64", "%s(" },                                             \
+[415] = { "not_implemented", "%s(" },                                          \
+[416] = { "io_pgetevents_time64", "%s(" },                                     \
+[417] = { "recvmmsg_time64", "%s(" },                                          \
+[418] = { "mq_timedsend_time64", "%s(" },                                      \
+[419] = { "mq_timedreceive_time64", "%s(" },                                   \
+[420] = { "semtimedop_time64", "%s(" },                                        \
+[421] = { "rt_sigtimedwait_time64", "%s(" },                                   \
+[422] = { "futex_time64", "%s(" },                                             \
+[423] = { "sched_rr_get_interval_time64", "%s(" },                             \
+[424] = { "pidfd_send_signal", "%s(" },                                        \
+[425] = { "io_uring_setup", "%s(" },                                           \
+[426] = { "io_uring_enter", "%s(" },                                           \
+[427] = { "io_uring_register", "%s(" },                                        \
+[428] = { "open_tree", "%s(" },                                                \
+[429] = { "move_mount", "%s(" },                                               \
+[430] = { "fsopen", "%s(" },                                                   \
+[431] = { "fsconfig", "%s(" },                                                 \
+[432] = { "fsmount", "%s(" },                                                  \
+[433] = { "fspick", "%s(" },                                                   \
+[434] = { "pidfd_open", "%s(" },                                               \
+[435] = { "clone3", "%s(" },                                                   \
+[436] = { "close_range", "%s(" },                                              \
+[437] = { "openat2", "%s(" },                                                  \
+[438] = { "pidfd_getfd", "%s(" },                                              \
+[439] = { "faccessat2", "%s(" },                                               \
+[440] = { "process_madvise", "%s(" }
 #endif  // SYSCALLS_32_H
