@@ -61,15 +61,20 @@ int trace_syscalls(int pid) {
   int       signal = 0;
   siginfo_t sig    = {0};
   disable_signals();
-  ptrace(PTRACE_SEIZE, pid, 0, 0);
-  ptrace(PTRACE_INTERRUPT, pid, 0, 0);
-  ptrace(PTRACE_SYSCALL, pid, 0, 0);
+  usleep(100);
+  if (ptrace(PTRACE_SEIZE, pid, 0, 0) == -1)
+    FATAL("%s: ptrace(SEIZE): %s\n", prog_name, strerror(errno));
+  if (ptrace(PTRACE_INTERRUPT, pid, 0, 0) == -1)
+    FATAL("%s: ptrace(INTERRUPT): %s\n", prog_name, strerror(errno));
+  if (ptrace(PTRACE_SYSCALL, pid, 0, 0) == -1)
+    FATAL("%s: ptrace(SYSCALL): %s\n", prog_name, strerror(errno));
   for (; 42;) {
     int status = 0;
     if (waitpid(pid, &status, 0) == -1)
       FATAL("%s: waitpid(): %s\n", prog_name, strerror(errno));
     if (WIFSTOPPED(status)) {
-      ptrace(PTRACE_GETSIGINFO, pid, 0, &sig);
+      if (ptrace(PTRACE_GETSIGINFO, pid, 0, &sig) == -1)
+        FATAL("%s: ptrace(GETSIGINFO): %s\n", prog_name, strerror(errno));
       signal = WSTOPSIG(status);
       if (sig.si_code == SIGTRAP || sig.si_code == (SIGTRAP | 0x80)) {
         handle_syscall_io(pid);
@@ -77,7 +82,8 @@ int trace_syscalls(int pid) {
       } else if (execve_is_done(NULL, NULL)) {
         handle_signal(sig);
       }
-      ptrace(PTRACE_SYSCALL, pid, 0, signal);
+      if (ptrace(PTRACE_SYSCALL, pid, 0, signal) == -1)
+        FATAL("%s: ptrace(SYSCALL): %s\n", prog_name, strerror(errno));
     }
     if (WIFEXITED(status)) {
       int ret_value = WEXITSTATUS(status);
