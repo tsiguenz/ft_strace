@@ -62,14 +62,12 @@ int trace_syscalls(int pid) {
   disable_signals();
   ptrace(PTRACE_SEIZE, pid, 0, 0);
   ptrace(PTRACE_INTERRUPT, pid, 0, 0);
-  ptrace(PTRACE_SYSCALL, pid, 0, PTRACE_O_TRACEEXEC);
+  ptrace(PTRACE_SYSCALL, pid, 0, 0);
   for (; 42;) {
     int status = 0;
     if (waitpid(pid, &status, 0) == -1)
       FATAL("%s: waitpid(): %s\n", prog_name, strerror(errno));
     if (WIFSTOPPED(status)) {
-      if (status >> 8 == (SIGTRAP | (PTRACE_EVENT_EXEC << 8)))
-        printf("is execve\n");
       ptrace(PTRACE_GETSIGINFO, pid, 0, &sig);
       signal = WSTOPSIG(status);
       if (sig.si_code == SIGTRAP || sig.si_code == (SIGTRAP | 0x80)) {
@@ -89,8 +87,7 @@ int trace_syscalls(int pid) {
       char *signal_name = signals_abbrev[WTERMSIG(status)];
       fprintf(stderr, "+++ killed by SIG%s +++\n", signal_name);
       raise(WTERMSIG(status));
-      // exit value is not good
-      exit(WTERMSIG(status));
+      exit(128 + WTERMSIG(status));
     }
   }
 }
