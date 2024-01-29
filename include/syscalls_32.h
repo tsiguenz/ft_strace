@@ -195,7 +195,7 @@
 [189] = { "putpmsg", "%s(?, ?, ?, ?, ?, ?" },                                  \
 [190] = { "vfork", "%s(" },                                                    \
 [191] = { "ugetrlimit", "%s(?, ?, ?, ?, ?, ?" },                               \
-[192] = { "mmap", "%s(%p, %lu, %d, %d, %d, %d" },                              \
+[192] = { "mmap2", "%s(%p, %lu, %d, %d, %d, %d" },                             \
 [193] = { "truncate64", "%s(\"%s\", %d" },                                     \
 [194] = { "ftruncate64", "%s(%d, %d" },                                        \
 [195] = { "stat64", "%s(\"%s\", %p" },                                         \
@@ -246,8 +246,8 @@
 [240] = { "futex", "%s(%p, %d, 0x%lx, %p, %p, 0x%lx" },                        \
 [241] = { "sched_setaffinity", "%s(%d, %d, %p" },                              \
 [242] = { "sched_getaffinity", "%s(%d, %d, %p" },                              \
-[243] = { "set_thread_area", "%s(?, ?, ?, ?, ?, ?" },                          \
-[244] = { "get_thread_area", "%s(?, ?, ?, ?, ?, ?" },                          \
+[243] = { "set_thread_area", "%s(%p" },                                        \
+[244] = { "get_thread_area", "%s(%p" },                                        \
 [245] = { "io_setup", "%s(0x%lx, %p" },                                        \
 [246] = { "io_destroy", "%s(0x%lx" },                                          \
 [247] = { "io_getevents", "%s(0x%lx, 0x%lx, 0x%lx, %p, %p" },                  \
@@ -387,7 +387,7 @@
 [381] = { "pkey_alloc", "%s(0x%lx, 0x%lx" },                                   \
 [382] = { "pkey_free", "%s(%d" },                                              \
 [383] = { "statx", "%s(%d, \"%s\", 0x%lx, 0x%lx, %p" },                        \
-[384] = { "arch_prctl", "%s(?, ?, ?, ?, ?, ?" },                               \
+[384] = { "arch_prctl", "%s(%d, %p" },                                         \
 [385] = { "io_pgetevents", "%s(" },                                            \
 [386] = { "rseq", "%s(" },                                                     \
 [387] = { "not_implemented", "%s(" },                                          \

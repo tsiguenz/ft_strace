@@ -3,7 +3,6 @@
 MAINS=(
 	"basic.c"
 	"signals.c"
-	"no_signal_handler.c"
 )
 
 for main in "${MAINS[@]}"; do

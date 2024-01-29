@@ -35,4 +35,4 @@
 "PWR",                                                                         \
 "SYS"
 
-#endif // SIGNALS_ABBREV_H
+#endif  // SIGNALS_ABBREV_H

@@ -161,7 +161,7 @@
 [155] = { "pivot_root", "%s(\"%s\", \"%s\"" },                                 \
 [156] = { "_sysctl", "%s(?, ?, ?, ?, ?, ?" },                                  \
 [157] = { "prctl", "%s(%d, 0x%lx, 0x%lx, 0x%lx, 0x%lx" },                      \
-[158] = { "arch_prctl", "%s(?, ?, ?, ?, ?, ?" },                               \
+[158] = { "arch_prctl", "%s(%d, %p" },                                         \
 [159] = { "adjtimex", "%s(%p" },                                               \
 [160] = { "setrlimit", "%s(%d, %p" },                                          \
 [161] = { "chroot", "%s(\"%s\"" },                                             \
@@ -427,10 +427,10 @@
 [421] = { "not implemented", "%s(" },                                          \
 [422] = { "not implemented", "%s(" },                                          \
 [423] = { "not implemented", "%s(" },                                          \
-[424] = { "pidfd_send_signal", "%s(" },                                        \
-[425] = { "io_uring_setup", "%s(" },                                           \
-[426] = { "io_uring_enter", "%s(" },                                           \
-[427] = { "io_uring_register", "%s(" },                                        \
+[424] = { "pidfd_send_signal", "%s(%d, %d, %p, %d" },                          \
+[425] = { "io_uring_setup", "%s(%d, %p" },                                     \
+[426] = { "io_uring_enter", "%s(%d, %d, %d, %d, %p" },                         \
+[427] = { "io_uring_register", "%s(%d, %d, %p, %d" },                          \
 [428] = { "open_tree", "%s(" },                                                \
 [429] = { "move_mount", "%s(" },                                               \
 [430] = { "fsopen", "%s(" },                                                   \
