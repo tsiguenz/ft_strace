@@ -23,13 +23,18 @@ void print_in_kernel_space(int pid, struct x86_64_user_regs_struct registers,
           registers.rdx, registers.rcx, registers.r8, registers.r9);
 }
 
-void print_out_kernel_space(struct x86_64_user_regs_struct registers) {
-  int64_t ret_val = registers.rax;
-  if (ret_val >= 0) {
-    if (ret_val > 10000)
-      fprintf(stderr, ") = 0x%lx\n", ret_val);
-    else
+void print_out_kernel_space(struct x86_64_user_regs_struct registers,
+                            bool is_32_bits, int32_t ret_32) {
+  int64_t ret_val = is_32_bits ? ret_32 : (int64_t) registers.rax;
+  if (ret_val > -1 || ret_val < -4095) {
+    if (ret_val > 10000 || ret_val < -10000) {
+      if (is_32_bits)
+        fprintf(stderr, ") = 0x%x\n", (int32_t) ret_val);
+      else
+        fprintf(stderr, ") = 0x%lx\n", ret_val);
+    } else {
       fprintf(stderr, ") = %ld\n", ret_val);
+    }
   } else {
     // case when syscall-exit-stop because signal was caught
     // 512 to 530 are linux errnos and don't have description in strerror

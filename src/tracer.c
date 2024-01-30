@@ -42,10 +42,10 @@ void handle_syscall_io(int pid) {
     print_in_kernel_space(pid, current_regs, syscall);
     in_kernel_space = false;
   } else {
-    print_out_kernel_space(current_regs);
+    print_out_kernel_space(current_regs, is_32_bits, regs.regs32.eax);
     in_kernel_space = true;
     if (is_32_bits && print_mode && is_32_bits && syscall_number == 11) {
-      fprintf(stderr, "[ Process=%d runs in 32 bits mode. ]", pid);
+      fprintf(stderr, "[ Process=%d runs in 32 bits mode. ]\n", pid);
       print_mode = false;
     }
   }
