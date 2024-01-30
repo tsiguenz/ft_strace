@@ -16,6 +16,7 @@ set_regs32_to_current_regs(struct x86_64_user_regs_struct *current_regs,
 
 void handle_syscall_io(int pid) {
   static bool       in_kernel_space = false;
+  static bool       print_mode      = true;
   union user_regs_t regs;
   struct iovec      io = {
            .iov_base = &regs,
@@ -43,6 +44,10 @@ void handle_syscall_io(int pid) {
   } else {
     print_out_kernel_space(current_regs);
     in_kernel_space = true;
+    if (is_32_bits && print_mode && is_32_bits && syscall_number == 11) {
+      fprintf(stderr, "[ Process=%d runs in 32 bits mode. ]", pid);
+      print_mode = false;
+    }
   }
 }
 
@@ -68,7 +73,7 @@ int trace_syscalls(int pid) {
     FATAL("%s: ptrace(INTERRUPT): %s\n", prog_name, strerror(errno));
   if (ptrace(PTRACE_SYSCALL, pid, 0, 0) == -1)
     FATAL("%s: ptrace(SYSCALL): %s\n", prog_name, strerror(errno));
-  for (; 42;) {
+  while (42) {
     int status = 0;
     if (waitpid(pid, &status, 0) == -1)
       FATAL("%s: waitpid(): %s\n", prog_name, strerror(errno));
