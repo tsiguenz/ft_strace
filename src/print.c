@@ -38,6 +38,8 @@ void print_out_kernel_space(struct x86_64_user_regs_struct registers,
   } else {
     // case when syscall-exit-stop because signal was caught
     // 512 to 530 are linux errnos and don't have description in strerror
+    if ((-ret_val > MAX_LEN_ERRNO && -ret_val < 512) || -ret_val > 530)
+      fprintf(stderr, ") = ? Unknow errno %ld\n", -ret_val);
     if (-ret_val >= 512 && -ret_val <= 530) {
       fprintf(stderr, ") = ? %s\n", errno_ent[-ret_val]);
     } else {
