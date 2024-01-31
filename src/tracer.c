@@ -52,8 +52,7 @@ void handle_syscall_io(int pid) {
 }
 
 void handle_signal(siginfo_t signal) {
-  if ((signal.si_code != SI_USER && signal.si_code != SI_KERNEL)
-      || (signal.si_signo > MAX_SIGNAL_ABBREV || signal.si_signo < 0))
+  if (signal.si_signo > MAX_SIGNAL_ABBREV || signal.si_signo < 0)
     return;
   char *sicode = signal.si_code == SI_USER ? "SI_USER" : "SI_KERNEL";
   char *signo  = signals_abbrev[signal.si_signo];
