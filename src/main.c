@@ -16,7 +16,10 @@ void check_and_set_exec_name(char **exec_name) {
   if (strlen(*exec_name) == 0)
     FATAL("%s: access: error bad file name!\n", prog_name);
   int   is_relative = strchr(*exec_name, '/') != NULL;
-  char *path_value  = getenv("PATH");
+  char *path_value  = strdup(getenv("PATH"));
+  if (!path_value)
+    FATAL("%s: error allocation!\n", prog_name);
+  char *p = path_value;
   while (!is_relative && path_value) {
     char *pos_colon = strchr(path_value, ':');
     if (pos_colon) {
@@ -25,18 +28,22 @@ void check_and_set_exec_name(char **exec_name) {
     }
     char *full_name =
         calloc(strlen(path_value) + strlen(*exec_name) + 2, sizeof(char));
-    if (!full_name)
+    if (!full_name) {
+      free(p);
       FATAL("%s: error allocation!\n", prog_name);
+    }
     strcpy(full_name, path_value);
     full_name[strlen(path_value)] = '/';
     strcat(full_name, *exec_name);
     if (access(full_name, X_OK) == 0) {
+      free(p);
       *exec_name = full_name;
       return;
     }
     free(full_name);
     path_value = pos_colon;
   }
+  free(p);
   if (access(*exec_name, X_OK) != 0)
     FATAL("%s: access: error bad file name!\n", prog_name);
   *exec_name = strdup(*exec_name);
